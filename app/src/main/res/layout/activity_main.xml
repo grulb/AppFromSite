@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Activities.MainActivity">
 
     <Toolbar
         android:id="@+id/toolbar"
@@ -26,25 +26,35 @@
             android:src="@mipmap/logo_vrgrad"/>
 
         <Button
-            android:id="@+id/authorizeButton"
+            android:id="@+id/requestButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
-            android:padding="7dp"
-            android:textSize="12dp"
-            android:text="Авторизоваться"
+            android:paddingHorizontal="15dp"
+            android:textSize="15dp"
+            android:text="Заявка на расчет"
             android:textColor="@color/black"
+            android:fontFamily="@font/montserrat_regular"
             android:backgroundTint="@color/lightBlue"/>
 
     </Toolbar>
+
+    <EditText
+        android:id="@+id/searchSmeta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите наименование"
+        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomMenu"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/searchSmeta" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomMenu"
@@ -56,6 +66,7 @@
         app:itemTextColor="@color/bottom_nav_colors"
         app:menu="@menu/bottom_menu_items"
         app:labelVisibilityMode="selected"
-        app:itemActiveIndicatorStyle="@color/transparent"/>
+        app:itemActiveIndicatorStyle="@color/transparent"
+        android:background="#DBDBDB"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

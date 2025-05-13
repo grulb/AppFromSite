@@ -6,12 +6,12 @@
         android:icon="@drawable/home_icon"/>
 
     <item
-        android:id="@+id/priceItem"
-        android:title="Цены"
-        android:icon="@drawable/price_icon"/>
-
-    <item
         android:id="@+id/workItem"
         android:title="Услуги"
         android:icon="@drawable/work_icon"/>
+
+    <item
+        android:id="@+id/priceItem"
+        android:title="Цены"
+        android:icon="@drawable/price_icon"/>
 </menu>

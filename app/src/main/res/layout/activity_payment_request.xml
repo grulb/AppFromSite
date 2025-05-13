@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.PaymentRequestActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Заявка на расчет"
+        android:textSize="35dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:layout_gravity="center"
+        android:layout_marginTop="-50dp"/>
+
+    <EditText
+        android:id="@+id/requestName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="12"
+        android:layout_gravity="center"
+        android:hint="Ваше имя"
+        android:background="@drawable/textboxes_shape"
+        android:padding="10dp"/>
+
+    <EditText
+        android:id="@+id/requestEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="12"
+        android:layout_gravity="center"
+        android:hint="Ваша почта"
+        android:background="@drawable/textboxes_shape"
+        android:padding="10dp"/>
+
+    <EditText
+        android:id="@+id/requestTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="12"
+        android:layout_gravity="center"
+        android:hint="Тема"
+        android:background="@drawable/textboxes_shape"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/requestMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="12"
+        android:layout_gravity="center"
+        android:hint="Сообщение"
+        android:background="@drawable/textboxes_shape"
+        android:padding="10dp"
+        android:singleLine="false"
+        android:maxLines="4" />
+
+    <Button
+        android:id="@+id/createButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:text="Создать"
+        android:textSize="20dp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="40dp"
+        android:backgroundTint="@color/lightBlue"
+        android:fontFamily="@font/montserrat_regular"/>
+
+</LinearLayout>
