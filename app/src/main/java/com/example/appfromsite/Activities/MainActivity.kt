@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.priceItem -> {
                     binding.searchSmeta.visibility = View.GONE
-//                    setCurrentFragment()
+                    setCurrentFragment(StockFragment())
                 }
             }
             true

@@ -36,7 +36,7 @@ class PhotoFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        binding.photoRecycler.layoutManager = GridLayoutManager(requireContext(), 2) // 2 колонки
+        binding.photoRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.photoRecycler.adapter = adapter
         binding.photoRecycler.addItemDecoration(
             DividerItemDecoration(requireContext(), DividerItemDecoration.HORIZONTAL).apply {

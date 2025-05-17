@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WorkDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllWorks(prices: List<WorkEntity>)
-
-    @Update
-    suspend fun updatePrice(price: WorkEntity)
+    suspend fun insertAllWorks(works: List<WorkEntity>)
 
     @Query("SELECT * FROM work_table ORDER BY name ASC")
     fun getAllWorks(): Flow<List<WorkEntity>>
+
+    @Query("SELECT COUNT(*) FROM work_table")
+    suspend fun getCount(): Int
 }
