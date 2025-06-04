@@ -11,7 +11,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
-class StockRepository(private val parser: WebParser) {
+class StockRepository(
+    private val webParser: WebParser,
+    private val imageParser: StockPhotoParser
+) {
     private val stockUrls = listOf(
         "https://vrgrad.ru/novosti-kompanii/akczii-i-skidki/skidka-na-majskie-prazdniki-aktivirovana/",
         "https://vrgrad.ru/novosti-kompanii/uspejte-zakazat-remont-po-staroj-czene/",
@@ -27,21 +30,25 @@ class StockRepository(private val parser: WebParser) {
         "https://vrgrad.ru/novosti-kompanii/akczii-i-skidki/zakazhi-lyuboj-remont-v-sentyabre-i-poluchi-podarok/"
     )
 
-    suspend fun getStocks(): List<StockEntity> = coroutineScope {
-        stockUrls.map { url ->
-            async {
-                try {
-                    delay(300)
-                    parser.parseStockData(url).also {
-                        Log.d("StockRepository", "Parsed: $url -> ${it != null}")
-                    }
-                } catch (e: Exception) {
-                    Log.e("StockRepository", "Error parsing $url", e)
-                    null
+    suspend fun getStocks(): List<StockEntity> = withContext(Dispatchers.IO) {
+        val textResults = mutableListOf<StockEntity>()
+        val imageUrls = imageParser.getImageUrls()
+
+        stockUrls.forEachIndexed { index, url ->
+            try {
+                val stock = webParser.parseStockData(url)
+                if (stock != null) {
+                    val imageUrl = if (index < imageUrls.size) imageUrls[index] else ""
+                    textResults.add(stock.copy(url = imageUrl))
+                    Log.d("StockRepository", "Successfully parsed: $url with image: $imageUrl")
                 }
+                delay(500)
+            } catch (e: Exception) {
+                Log.e("StockRepository", "Error parsing $url", e)
             }
-        }.awaitAll().filterNotNull().also {
-            Log.d("StockRepository", "Total items: ${it.size}")
         }
+
+        Log.d("StockRepository", "Total parsed items: ${textResults.size}")
+        return@withContext textResults
     }
 }

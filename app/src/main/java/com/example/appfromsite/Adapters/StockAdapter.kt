@@ -32,10 +32,16 @@ class StockAdapter : RecyclerView.Adapter<StockAdapter.StockViewHolder>() {
         holder.stockTitle.text = stock.title
         holder.stockDesc.text = stock.text
 
-        Glide.with(holder.itemView.context)
-            .load(stock.url)
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(holder.stockImage)
+        if (stock.url.isNotBlank()) {
+            Glide.with(holder.itemView.context)
+                .load(stock.url)
+                .placeholder(R.color.grey)
+                .error(R.drawable.ic_launcher_background)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(holder.stockImage)
+        } else {
+            holder.stockImage.setImageResource(R.drawable.ic_launcher_background)
+        }
     }
 
     override fun getItemCount(): Int = stocks.size

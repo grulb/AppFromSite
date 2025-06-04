@@ -12,29 +12,43 @@ import java.io.IOException
 class WebParser {
     fun parseStockData(url: String): StockEntity? {
         return try {
-            val document = Jsoup.connect(url)
+            val doc = Jsoup.connect(url)
                 .timeout(15_000)
-                .ignoreHttpErrors(true)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+                .userAgent("Mozilla/5.0")
                 .get()
 
-            if (document == null) {
-                Log.e("WebParser", "Document is null for URL: $url")
-                return null
-            }
+            val title = doc.selectFirst("h1.elementor-heading-title")?.text()?.trim() ?: ""
 
-            // Парсим данные
-            val title = document.selectFirst("h1.elementor-heading-title")?.text() ?: ""
-            val text = document.select("div.elementor-widget-container p").joinToString("\n") { it.text() }
-            val imageUrl = document.selectFirst("div.elementor-widget-container img")?.attr("src") ?: ""
+            val textElements = doc.select("div.elementor-widget-container p")
 
-            StockEntity(0, imageUrl, title, text)
+            val filteredText = textElements
+                .filterNot { element ->
+                    // Исключаем элементы, содержащие пагинацию, соцсети, контакты
+                    element.text().contains("Ранее") ||
+                            element.text().contains("Страница") ||
+                            element.text().contains("Далее") ||
+                            element.text().contains("Whatsapp") ||
+                            element.text().contains("Vk") ||
+                            element.text().contains("Telegram") ||
+                            element.text().contains("Odnoklassniki") ||
+                            element.text().contains("Youtube") ||
+                            element.text().matches(Regex("""\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}""")) ||
+                            element.text().contains("Info@") ||
+                            element.text().contains("г. Москва") ||
 
-        } catch (e: IOException) {
-            Log.e("WebParser", "Network error for URL: $url", e)
-            null
+                            // Исключаем элементы, которые находятся в футере
+                            element.parents().any { parent ->
+                                parent.hasClass("footer") ||
+                                        parent.tagName() == "footer" ||
+                                        parent.hasClass("elementor-location-footer")
+                            }
+                }
+                .joinToString("\n") { it.text().trim() }
+                .replace(Regex("""<[^>]*>|[«»]"""), "") // Удаляем оставшиеся HTML-теги и кавычки
+
+            StockEntity(0, "", title, filteredText)
         } catch (e: Exception) {
-            Log.e("WebParser", "Unexpected error for URL: $url", e)
+            Log.e("WebParser", "Error parsing URL: $url", e)
             null
         }
     }

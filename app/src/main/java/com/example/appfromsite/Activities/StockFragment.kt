@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.appfromsite.Adapters.StockAdapter
+import com.example.appfromsite.Adapters.StockPhotoParser
 import com.example.appfromsite.Adapters.StockRepository
 import com.example.appfromsite.Adapters.WebParser
 import com.example.appfromsite.R
@@ -22,21 +23,26 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class StockFragment : Fragment() {
-    private lateinit var binding: FragmentStockBinding
+    private var _binding: FragmentStockBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapter: StockAdapter
-    private val repository by lazy { StockRepository(WebParser()) }
+    private val repository by lazy {
+        StockRepository(
+            WebParser(),
+            StockPhotoParser()
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentStockBinding.inflate(layoutInflater)
+        _binding = FragmentStockBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupRecyclerView()
         loadStocks()
     }
@@ -44,14 +50,16 @@ class StockFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = StockAdapter()
         binding.stockRecycler.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(context)
             adapter = this@StockFragment.adapter
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    LinearLayoutManager.VERTICAL
+            context?.let { safeContext ->
+                addItemDecoration(
+                    DividerItemDecoration(
+                        safeContext,
+                        LinearLayoutManager.VERTICAL
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -62,15 +70,30 @@ class StockFragment : Fragment() {
                     repository.getStocks()
                 }
 
+                if (!isAdded || context == null) return@launch
+
                 if (stocks.isEmpty()) {
-                    Toast.makeText(requireContext(), "No stocks found", Toast.LENGTH_SHORT).show()
+                    showToast("No stocks found")
                 } else {
                     adapter.updateData(stocks)
+                    binding.progressBar.visibility = View.GONE
+                    binding.stockRecycler.visibility = View.VISIBLE
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                showToast("Error: ${e.message}")
                 Log.e("StockFragment", "Error loading stocks", e)
             }
         }
+    }
+
+    private fun showToast(message: String?) {
+        if (isAdded && context != null) {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

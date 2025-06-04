@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity">
+    tools:context=".Activities.MainActivity"
+    android:background="@color/white">
 
     <Toolbar
         android:id="@+id/toolbar"
@@ -16,8 +17,7 @@
         android:layout_marginStart="-1dp"
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="horizontal"
-        android:paddingVertical="7dp"
-        android:background="@drawable/black_stroke_box">
+        android:paddingVertical="7dp">
 
         <ImageView
             android:layout_width="128dp"
@@ -34,27 +34,19 @@
             android:paddingHorizontal="15dp"
             android:textSize="15dp"
             android:text="Заявка на расчет"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:fontFamily="@font/montserrat_regular"
             android:backgroundTint="@color/lightBlue"/>
 
     </Toolbar>
-
-    <EditText
-        android:id="@+id/searchSmeta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Введите наименование"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomMenu"
-        app:layout_constraintTop_toBottomOf="@+id/searchSmeta" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:background="@drawable/black_stroke_box"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomMenu"
@@ -67,6 +59,6 @@
         app:menu="@menu/bottom_menu_items"
         app:labelVisibilityMode="selected"
         app:itemActiveIndicatorStyle="@color/transparent"
-        android:background="#DBDBDB"/>
+        android:background="@drawable/bottom_menu_shape"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

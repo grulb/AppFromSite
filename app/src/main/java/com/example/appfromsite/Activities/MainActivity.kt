@@ -41,15 +41,12 @@ class MainActivity : AppCompatActivity() {
         binding.bottomMenu.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.mainItem -> {
-                    binding.searchSmeta.visibility = View.GONE
                     setCurrentFragment(PhotoFragment())
                 }
                 R.id.workItem -> {
-                    binding.searchSmeta.visibility = View.VISIBLE
                     setCurrentFragment(WorkFragment())
                 }
                 R.id.priceItem -> {
-                    binding.searchSmeta.visibility = View.GONE
                     setCurrentFragment(StockFragment())
                 }
             }

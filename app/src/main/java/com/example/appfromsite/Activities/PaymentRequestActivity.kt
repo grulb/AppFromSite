@@ -2,13 +2,16 @@ package com.example.appfromsite.Activities
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.provider.ContactsContract.Data
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.appfromsite.Adapters.EmailSender
 import com.example.appfromsite.DAO.PaymentRequestDAO
 import com.example.appfromsite.DatabaseClient
 import com.example.appfromsite.Entity.PaymentsRequestEntity
@@ -22,47 +25,77 @@ import kotlinx.coroutines.withContext
 
 class PaymentRequestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPaymentRequestBinding
-    private lateinit var database: DatabaseClient
-    private lateinit var paymentRequestDAO: PaymentRequestDAO
+
+    private val recipientEmail = "isalce0451@gmail.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityPaymentRequestBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        database = DatabaseClient.getDatabase(this)
-        paymentRequestDAO = database.paymentRequestDAO()
 
         binding.createButton.setOnClickListener {
-            createRequest()
+            if (isNetworkAvailable()) {
+                createRequest()
+            } else {
+                Toast.makeText(this, "Нет интернет-соединения", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.cancelButton.setOnClickListener {
+            cancelRequest()
         }
     }
 
     private fun createRequest() {
-        val name = binding.requestName.text.toString()
-        val mail = binding.requestEmail.text.toString()
-        val theme = binding.requestTheme.text.toString()
-        val message = binding.requestMessage.text.toString()
+        val name = binding.requestName.text.toString().trim()
+        val mail = binding.requestEmail.text.toString().trim()
+        val theme = binding.requestTheme.text.toString().trim()
+        val message = binding.requestMessage.text.toString().trim()
 
-        if (name == "" || mail == "" || theme == "" || message == "") {
+        if (name.isEmpty() || mail.isEmpty() || theme.isEmpty() || message.isEmpty()) {
             Toast.makeText(this, "Все поля должны быть заполнены", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val emailBody = """
+            Новая заявка на оплату:
+
+            Имя: $name
+            Email: $mail
+            Тема: $theme
+            Сообщение:
+            $message
+        """.trimIndent()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val userRequest = PaymentsRequestEntity(0, name, mail, theme, message)
+            try {
+                val emailSender = EmailSender(mail)
 
-            paymentRequestDAO.createRequest(userRequest)
+                emailSender.sendEmail(
+                    recipient = recipientEmail,
+                    subject = "Заявка на оплату: $theme",
+                    body = emailBody
+                )
 
-            withContext(Dispatchers.Main) {
-                Toast.makeText(this@PaymentRequestActivity, "Ваша заявка успешно создана", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this@PaymentRequestActivity, MainActivity::class.java))
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@PaymentRequestActivity, "Заявка отправлена", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this@PaymentRequestActivity, MainActivity::class.java))
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@PaymentRequestActivity, "Ошибка отправки: ${e.message}", Toast.LENGTH_LONG).show()
+                }
             }
         }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
+    private fun cancelRequest() {
+        finish()
     }
 }

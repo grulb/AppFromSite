@@ -7,16 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".Activities.PaymentRequestActivity"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@color/white">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Заявка на расчет"
-        android:textSize="35dp"
-        android:fontFamily="@font/montserrat_regular"
         android:layout_gravity="center"
-        android:layout_marginTop="-50dp"/>
+        android:layout_marginTop="-50dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Заявка на расчет"
+        android:textColor="@color/black"
+        android:textSize="35dp" />
 
     <EditText
         android:id="@+id/requestName"
@@ -27,7 +29,9 @@
         android:layout_gravity="center"
         android:hint="Ваше имя"
         android:background="@drawable/textboxes_shape"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:textColorHint="@color/darkGrey"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/requestEmail"
@@ -38,7 +42,9 @@
         android:layout_gravity="center"
         android:hint="Ваша почта"
         android:background="@drawable/textboxes_shape"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:textColorHint="@color/darkGrey"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/requestTheme"
@@ -49,7 +55,9 @@
         android:layout_gravity="center"
         android:hint="Тема"
         android:background="@drawable/textboxes_shape"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:textColorHint="@color/darkGrey"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/requestMessage"
@@ -62,7 +70,9 @@
         android:background="@drawable/textboxes_shape"
         android:padding="10dp"
         android:singleLine="false"
-        android:maxLines="4" />
+        android:maxLines="4"
+        android:textColorHint="@color/darkGrey"
+        android:textColor="@color/black"/>
 
     <Button
         android:id="@+id/createButton"
@@ -75,6 +85,20 @@
         android:paddingVertical="10dp"
         android:paddingHorizontal="40dp"
         android:backgroundTint="@color/lightBlue"
+        android:fontFamily="@font/montserrat_regular"/>
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:text="Отмена"
+        android:textSize="15dp"
+        android:paddingVertical="5dp"
+        android:paddingHorizontal="25dp"
+        android:backgroundTint="#FD6464"
+        android:textColor="@color/white"
         android:fontFamily="@font/montserrat_regular"/>
 
 </LinearLayout>
